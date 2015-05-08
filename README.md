@@ -55,10 +55,17 @@ The path to your livingstyleguide config file.
 
 #### options.dest
 Type: `String`   
-Default value: `styleguide.html`   
+Default: `styleguide.html`   
 **Optional*
 
 The path to your destination file.
+
+#### options.bundleExec
+Type: `Boolean`  
+Default: `false`   
+**Optional*
+
+Run `livingstyleguide` with [bundle exec](http://gembundler.com/man/bundle-exec.1.html): `bundle exec livingstyleguide`.
 
 ### Usage Examples
 
@@ -69,6 +76,7 @@ grunt.initConfig({
   livingstyleguide: {
     generate: {
       options: {
+        bundleExec: false,
         src: 'test/fixtures/styleguide.lsg',
         dest: 'tmp/styleguide.html'
       }
@@ -76,6 +84,9 @@ grunt.initConfig({
   },
 })
 ```
+
+## Release History
+[Changelog](/CHANGELOG.md)
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).

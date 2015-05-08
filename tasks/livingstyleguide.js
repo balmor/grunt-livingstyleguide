@@ -26,7 +26,7 @@ module.exports = function (grunt) {
         options  = this.options({
           dest: 'docs/styleguide.html'
         }),
-        commmand = 'livingstyleguide',
+        command = 'livingstyleguide',
         compile  = 'compile';
 
     // Check if the livingstyleguide is installed
@@ -34,7 +34,7 @@ module.exports = function (grunt) {
       which.sync('livingstyleguide');
     } catch (err) {
       return grunt.log.error(
-        NEW_LINE +'You need to have livingstyleguide installed and in your PATH for this task to work.' + NEW_LINE + 'sudo gem install livingstyleguide' + NEW_LINE
+        NEW_LINE + 'You need to have livingstyleguide installed and in your PATH for this task to work.' + NEW_LINE + 'sudo gem install livingstyleguide' + NEW_LINE
       );
     }
 
@@ -54,10 +54,15 @@ module.exports = function (grunt) {
       grunt.file.write(options.dest);
     }
 
-    grunt.log.writeln('\'' + commmand + ' ' + compile + ' ' + options.src + ' ' +  options.dest + '\'');
+    // Check if bundleExec is true
+    if (options.bundleExec) {
+      command = "bundle exec " + command;
+    }
+
+    grunt.log.writeln('\'' + command + ' ' + compile + ' ' + options.src + ' ' +  options.dest + '\'');
 
     var livingProcess = {
-      cmd: commmand,
+      cmd: command,
       args: [compile, options.src, options.dest]
     };
 
