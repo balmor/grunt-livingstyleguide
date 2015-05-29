@@ -37,10 +37,18 @@ module.exports = function (grunt) {
     livingstyleguide: {
       generate: {
         options: {
-          src: 'test/fixtures/styleguide.lsg',
-          dest: 'tmp/test.html'
+          src: 'test/fixtures/styleguide.lsg'
         }
       }
+    },
+
+    // Configuration to be run (and then tested).
+    copyfiles: {
+      // generate: {
+        files: {
+          src: ['test/fixtures/styleguide.lsg','test/fixtures/nexway.lsg']
+        }
+      // }
     },
 
     // Unit tests.
