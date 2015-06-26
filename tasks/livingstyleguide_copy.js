@@ -15,7 +15,7 @@ var path  = require('path'),
 
 module.exports = function (grunt) {
 
-  var MODULE_NAME     = 'livingstyleguide',
+  var MODULE_NAME     = 'livingstyleguide_copy',
       MODULE_DESC     = 'Easily create living style guides/front-end style guides/pattern libraries by adding Markdown documentation to your Sass project.',
       NEW_LINE        = '\n';
 
@@ -38,42 +38,48 @@ module.exports = function (grunt) {
       );
     }
 
+     // Make sure config file exists with '.lsg' extension
+    if (!grunt.file.exists(options.src) || path.extname(options.src)  !== '.lsg') {
+      return grunt.log.error('Config file "' + options.src + '" not found or incorrect extension (ex. "styleguide.lsg").');
+    }
+
+    // Check if destination path was set with '.html' extension
+    if (options.dest) {
+      if (path.extname(options.dest) !== '.html') {
+        return grunt.log.error(
+          NEW_LINE + 'You must provide correct extension (html) of the destination path to your livingstyleguide (ex. "styleguide.html")' + NEW_LINE
+        );
+      }
+
+      grunt.file.write(options.dest);
+    }
+
     // Check if bundleExec is true
     if (options.bundleExec) {
       command = "bundle exec " + command;
     }
 
-    this.files.forEach(function(file) {
-      file.src.filter(function(filepath) {
-        var livingProcess = {
-          cmd: command,
-          args: [compile, filepath]
-        };
-        var livingDone = function(error, result, code) {
-          if (result.stdout) {
-            grunt.log.ok(String(result));
-          }
-          if (error) {
-            return done(error);
-          } else {
-            return done();
-          }
-        };
-        grunt.log.writeln('\'' + command + ' ' + compile + ' ' + filepath + '\'');
-        // Run livingstyleguide
-        grunt.util.spawn(livingProcess, livingDone);
+    grunt.log.writeln('\'' + command + ' ' + compile + ' ' + options.src + ' ' +  options.dest + '\'');
 
-        // Remove nonexistent files (it's up to you to filter or warn here).
-        if (!grunt.file.exists(filepath)) {
-          grunt.log.warn('Source file "' + filepath + '" not found.');
-          return false;
-        } else {
-          console.log(filepath);
-          // console.log(dest);
-          return true;
-        }
-      });
-    });
+    var livingProcess = {
+      cmd: command,
+      args: [compile, options.src, options.dest]
+    };
+
+    function livingDone(error, result, code) {
+      if (result.stdout) {
+        grunt.log.ok(String(result));
+      }
+      if (error) {
+        return done(error);
+      } else {
+        return done();
+      }
+    }
+
+    // Run livingstyleguide
+    grunt.util.spawn(livingProcess, livingDone);
 
   });
+
 };
